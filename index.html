@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema Invadido</title>
+  <style>
+    /* Estilo inicial - Tela hacker */
+    body {
+      background-color: black;
+      color: lime;
+      font-family: monospace;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      transition: all 1s;
+    }
+
+    /* Efeito hacker */
+    #hack {
+      position: absolute;
+      top: 20px;
+      left: 10px;
+      text-align: left;
+      font-size: 16px;
+      white-space: pre-line;
+    }
+
+    .linha {
+      opacity: 0;
+      overflow: hidden;
+      display: block;
+      white-space: nowrap;
+      border-right: 2px solid lime;
+      width: 0;
+      animation: digitar 2s steps(30, end) forwards, piscarCursor 0.5s infinite;
+    }
+
+    @keyframes digitar {
+      from { width: 0; opacity: 1; }
+      to { width: 100%; opacity: 1; }
+    }
+
+    @keyframes piscarCursor {
+      50% { border-color: transparent; }
+    }
+
+    /* Esconde o conteúdo principal e as novas telas até o efeito hacker acabar */
+    #conteudo,
+    #novaTela,
+    #novaTela2 {
+      display: none;
+    }
+
+    /* Novo estilo após o hack */
+    .modo-normal {
+      background-color: white;
+      color: black;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Estilos do conteúdo */
+    #pergunta,
+    #senha,
+    #coração,
+    #mensagem,
+    #dica,
+    #dica2 {
+      display: none;
+    }
+
+    /* Coração com brilho */
+    #coração {
+      font-size: 50px;
+      color: red;
+      cursor: pointer;
+      animation: pulsar 1s infinite, brilho 2s infinite alternate;
+    }
+
+    @keyframes pulsar {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes brilho {
+      0% { text-shadow: 0 0 5px red; }
+      100% { text-shadow: 0 0 15px red; }
+    }
+
+    /* Botões */
+    .botao {
+      background-color: pink;
+      color: black;
+      border: none;
+      padding: 10px;
+      font-size: 18px;
+      cursor: pointer;
+      margin: 10px;
+    }
+
+    /* Estilo da mensagem final */
+    #mensagem h2 {
+      font-family: cursive;
+      font-size: 26px;
+    }
+
+    #mensagem p {
+      font-size: 18px;
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 2px solid black;
+      width: 0;
+      animation: digitarTexto 3s steps(40, end) forwards;
+    }
+
+    @keyframes digitarTexto {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    #gatinho {
+      width: 200px;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Efeito hacker -->
+  <div id="hack">
+    <p class="linha" style="animation-delay: 0s;">[ERROR] System breach detected...</p>
+    <p class="linha" style="animation-delay: 1s;">[WARNING] Unauthorized access detected...</p>
+    <p class="linha" style="animation-delay: 2s;">[CRITICAL] Firewall compromised...</p>
+    <p class="linha" style="animation-delay: 3s;">Downloading sensitive data...</p>
+  </div>
+
+  <!-- Primeira nova tela com mensagem de hackeado -->
+  <div id="novaTela">
+    <p class="linha" style="animation-delay: 0s;">você acabou de ser hackeado :)</p>
+  </div>
+
+  <!-- Segunda nova tela com a mensagem de monitoramento -->
+  <div id="novaTela2">
+    <p class="linha" style="animation-delay: 0s;">agora passarei a monitorar você 48hrs por dia,<br> obrigado por ter confiado em mim <br>❤️😈</p>
+    <img src="https://media.giphy.com/media/x5lIgu2DDtI5IzdtUg/giphy.gif" alt="Russian Kid Dance">
+  </div>
+
+  <!-- Conteúdo normal após o hack -->
+  <div id="conteudo">
+    <div id="pergunta">
+      <h2>Você é o Marcos?</h2>
+      <button class="botao" onclick="responder('sim')">Sim</button>
+      <button class="botao" onclick="responder('não')">Não</button>
+      <p id="avisoNao"></p>
+    </div>
+
+    <div id="senha">
+      <h2>Digite a senha para acessar:</h2>
+      <input type="password" id="entradaSenha">
+      <button class="botao" onclick="verificarSenha()">Acessar</button>
+      <p id="aviso"></p>
+    </div>
+
+    <!-- Bloco de dica exibido ao errar a senha 2 vezes -->
+    <div id="dica">
+      <h3>🧐 Vai uma dica?</h3>
+      <button class="botao" onclick="mostrarDica()">Sim</button>
+      <button class="botao" onclick="fecharDica()">Não</button>
+      <p id="textoDica" style="display:none;">Se você acha que é uma data use a /.<br>Se acha que é algum nome use letras maiúsculas.</p>
+    </div>
+
+    <!-- Novo bloco de dica exibido ao errar a senha novamente (3ª vez) -->
+    <div id="dica2">
+      <h3>🧐 Quer outra dica?</h3>
+      <button class="botao" onclick="mostrarDica2()">Sim</button>
+      <button class="botao" onclick="fecharDica2()">Não</button>
+      <p id="textoDica2" style="display:none;">é uma data importante rs</p>
+    </div>
+
+    <div id="coração" onclick="mostrarMensagem()">❤️</div>
+
+    <div id="mensagem">
+      <h2>Parabéns meu bem!🎉</h2>
+      <h4>feliz vida, te desejo tudo de melhor que vc encontre a<br> verdadeira felicidade e que sempre tenha disposição pra ir atrás de<br> todos os seus sonhos, que vc sempre esteja em constante evolução,<br> desejo que vc seja muitoooo feliz... que todos os seus medos,<br> negatividade e tudo que for ruim não habite em vc, que Deus continue<br> iluminando e abençoando a sua alma pra smp, tenho orgulho da pessoa que você e seu também que seu filho mesmo não entendendo também tem e te ama muito!</h4>
+      <img src="https://media.giphy.com/media/nn2cS5D6QlSAIJnZMn/giphy.gif" alt="Coração animado">
+    </div>
+  </div>
+
+  <script>
+    let erros = 0;
+
+    function iniciarHack() {
+      setTimeout(() => {
+        // Oculta a tela de hack e exibe a primeira nova tela
+        document.getElementById("hack").style.display = "none";
+        document.getElementById("novaTela").style.display = "block";
+        setTimeout(() => {
+          // Esconde a primeira nova tela e exibe a segunda nova tela
+          document.getElementById("novaTela").style.display = "none";
+          document.getElementById("novaTela2").style.display = "block";
+          setTimeout(() => {
+            // Oculta a segunda nova tela e exibe o conteúdo normal
+            document.getElementById("novaTela2").style.display = "none";
+            document.getElementById("conteudo").style.display = "block";
+            document.body.classList.add("modo-normal");
+            document.getElementById("pergunta").style.display = "block";
+          }, 5000); // Duração aumentada para 5000ms (5 segundos)
+        }, 3000);
+      }, 5000);
+    }
+
+    function responder(resposta) {
+      if (resposta === "sim") {
+        document.getElementById("pergunta").style.display = "none";
+        document.getElementById("senha").style.display = "block";
+      } else {
+        document.getElementById("avisoNao").innerText = "Tem certeza? 🧐";
+      }
+    }
+
+    function verificarSenha() {
+      let senha = document.getElementById("entradaSenha").value;
+      if (senha === "10/07/23") {
+        document.getElementById("senha").style.display = "none";
+        document.getElementById("dica").style.display = "none";
+        document.getElementById("dica2").style.display = "none";
+        document.getElementById("coração").style.display = "block";
+      } else {
+        erros++;
+        if (erros === 2) {
+          document.getElementById("dica").style.display = "block";
+        } else if (erros === 3) {
+          // Oculta a primeira dica e exibe a nova tela de dica
+          document.getElementById("dica").style.display = "none";
+          document.getElementById("dica2").style.display = "block";
+        } else {
+          document.getElementById("aviso").innerText = "Se você não acertar a senha, nunca saberá o que tem aqui! 😈";
+        }
+      }
+    }
+
+    function mostrarDica() {
+      let botoes = document.querySelectorAll("#dica .botao");
+      botoes.forEach(btn => btn.style.display = "none");
+      document.getElementById("textoDica").style.display = "block";
+    }
+
+    function fecharDica() {
+      document.getElementById("dica").style.display = "none";
+    }
+
+    function mostrarDica2() {
+      let botoes = document.querySelectorAll("#dica2 .botao");
+      botoes.forEach(btn => btn.style.display = "none");
+      document.getElementById("textoDica2").style.display = "block";
+    }
+
+    function fecharDica2() {
+      document.getElementById("dica2").style.display = "none";
+    }
+
+    function mostrarMensagem() {
+      document.getElementById("coração").style.display = "none";
+      document.getElementById("mensagem").style.display = "block";
+    }
+
+    iniciarHack();
+  </script>
+
+</body>
+</html>
